@@ -16,7 +16,7 @@ def healthz():
 
 @app.route("/version")
 def version():
-    return jsonify({"version": "1.0.1-test"})
+    return jsonify({"version": "1.0.1-Final"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
