@@ -18,5 +18,9 @@ def healthz():
 def version():
     return jsonify({"version": "1.0.1-FinalofFinal"})
 
+@app.route("/warning")
+def warning():
+    return jsonify({"warning":"test CICD Docker Container 2nd time"})
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)

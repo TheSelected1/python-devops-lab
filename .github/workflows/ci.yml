@@ -1,4 +1,4 @@
-name: CI
+name: CI-CD
 
 on:
   pull_request:
@@ -7,9 +7,9 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  ci:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
@@ -24,17 +24,44 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Smoke test import
+      - name: Smoke test
         run: |
           python -c "from app.main import app; print('app import ok')"
 
-  docker-build:
+      - name: Build docker image
+        run: docker build -t python-devops-lab:${{ github.sha }} .
+
+  cd:
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
-    needs: test
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Build Docker image
-        run: docker build -t python-devops-lab:${{ github.sha }} -t python-devops-lab:latest .
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/python-devops-lab:latest .
+
+      - name: Push image
+        run: docker push ghcr.io/${{ github.repository_owner }}/python-devops-lab:latest
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy on server
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            docker login ghcr.io -u ${{ github.actor }} -p "${{ secrets.GITHUB_TOKEN }}" &&
+            docker pull ghcr.io/${{ github.repository_owner }}/python-devops-lab:latest &&
+            docker compose up -d
+          '
