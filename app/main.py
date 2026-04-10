@@ -20,7 +20,7 @@ def version():
 
 @app.route("/warning")
 def warning():
-    return jsonify({"warning":"test CICD Docker Container 2nd time"})
+    return jsonify({"warning":"test CICD Docker Container 4th time - fix CD process"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
