@@ -19,7 +19,7 @@ def version():
     return jsonify({"version": "1.0.1-FinalofFinal"})
 
 @app.route("/update")
-defversion():
+def version():
 returnjsonify({"update":"test CICD Docker Container"})
 
 if __name__ == "__main__":
