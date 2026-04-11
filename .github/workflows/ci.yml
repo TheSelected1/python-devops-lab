@@ -65,5 +65,5 @@ jobs:
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin &&
             docker pull ghcr.io/theselected1/python-devops-lab:latest &&
             cd /home/nathan/Nathan-DevOps-Lab/python-devops-lab &&
-            docker compose up -d
+            docker compose up
           '
