@@ -20,7 +20,7 @@ def version():
 
 @app.route("/warning")
 def warning():
-    return jsonify({"warning":"test CICD Deployment with Self-hosted Runner"})
+    return jsonify({"warning":"test CICD Deployment -fix docker-compose action"})
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
