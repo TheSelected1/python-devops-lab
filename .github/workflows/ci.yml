@@ -64,6 +64,6 @@ jobs:
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
             echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin &&
             docker pull ghcr.io/theselected1/python-devops-lab:latest &&
-            cd /home/nath/docker-compose &&
+            cd /home/nathan/Nathan-DevOps-Lab/python-devops-lab &&
             docker compose up -d
           '
