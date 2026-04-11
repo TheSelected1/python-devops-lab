@@ -1,0 +1,9 @@
+services:
+  app:
+    image: ghcr.io/theselected1/python-devops-lab:latest
+    container_name: python-devops-lab
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      APP_ENV: production
